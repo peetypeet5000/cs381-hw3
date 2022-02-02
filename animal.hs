@@ -1,5 +1,3 @@
--- Homework 3 template
-
 module Sentence where
 
 -- Grammar for the animal sentence language:
@@ -12,6 +10,8 @@ module Sentence where
 
 --   <verb>		->  `chase` | `cuddle` | `hug` | `scare`
 --   <adj>		->	`silly` | `small` | `old` | `happy`
+
+-- Data Type Definitions
 
 data Sentence = NVN Noun Verb Noun
   | NV Noun Verb
@@ -30,6 +30,7 @@ data Noun = NP Adj Noun
 data Verb = Chase |  Cuddle | Hug | Scare
   deriving (Eq,Show)
 
+-- Example Sentences
 
 -- | The sentence: cats cuddle ducks and dogs cuddle ducks
 ex1 :: Sentence
@@ -44,6 +45,7 @@ ex3 = NVN (NAnd Dogs Cats) Chase Ducks
 ex4 :: Sentence
 ex4 = NVN (NAnd (NP Silly Dogs) Cats) Chase Ducks
 
+-- Sentence Constructors
 
 -- | Build a sentence from a noun verb noun.
 -- | buildS2 Cats Hug Cats
@@ -58,7 +60,6 @@ buildS2 n1 v n2= NVN n1 v n2
 
 buildS1 :: Noun -> Verb ->Sentence
 buildS1 n v = NV n v
-
 
 -- | Build a noun phrase from an adjective and noun
 -- | buildNP Silly Dogs
@@ -75,14 +76,16 @@ buildNAnd :: Noun -> Noun -> Noun
 buildNAnd n1 n2 = NAnd n1 n2
 
 -- | Build a sentence that is a conjunction of a list of other sentences.
+-- | Recursivly builds until only one element remains
 -- | conjunction [ex1, ex2]
 -- | And (NVN Cats Hug Dogs) (NVN (NP Silly Cats) Hug Dogs)
 conjunction :: [Sentence] -> Sentence
 conjunction (x:xs) 
-  | (xs== []) = x
+  | (xs == []) = x
   | otherwise = And x (conjunction(xs))
 
 -- | Pretty print a sentence.
+-- | Matches all possible sentence structures to print them
 pretty :: Sentence -> String
 pretty (NVN s v o) = prettyNoun s ++ " " ++ prettyVerb v ++ " " ++ prettyNoun o
 pretty (And l r)   = pretty l ++ " and " ++ pretty r
@@ -143,71 +146,3 @@ nounCount :: Noun -> Int
 nounCount (NP _ n) = 1 + nounCount n
 nounCount (NAnd n1 n2) = nounCount n1 + 1 + nounCount n2
 nounCount (_) = 1
-
-main = do
-	let s1 = buildS2 Cats Hug Bunnies
-	let s2 = buildS1 Cats Cuddle
-	let s3 = buildNP Silly Ducks
-	let s4 = buildNAnd Dogs Cats
-	let s5 = conjunction [s2, s1]
-	let s6 = buildS2 s3 Chase s4	
-	let s7 = buildS1 Dogs Scare
-	let s8 = conjunction [s1, s2, s7]
-	let s9 = buildNP Old s3
-	let s10 = buildS2 s9 Cuddle Cats
-
-	putStrLn " s1 "
-	print (s1)
-	print (pretty(s1))
-	putStrLn" Is nice s1 "
-	print (isNice s1)
-	putStrLn" Word count s1 "
-	print (wordCount s1)
-
-	putStrLn " s2 "
-	print (s2)
-	print (pretty(s2))
-	putStrLn" Is nice s2 "
-	print (isNice s2)
-	putStrLn" Word count s2 "
-	print (wordCount s2)
-
-	putStrLn " s5 "
-	print (s5)
-	print (pretty(s5))
-	putStrLn" Is nice s5 "
-	print (isNice s5)
-	putStrLn" Word count s5 "
-	print (wordCount s5)  
-
-	putStrLn " s6 "
-	print (s6)
-	print (pretty(s6))
-	putStrLn" Is nice s6 "
-	print (isNice s6)
-	putStrLn" Word count s6 "
-	print (wordCount s6)
-	
-	putStrLn " s7 "
-	print (s7)
-	print (pretty(s7))
-	putStrLn" Is nice s7 "
-	print (isNice s7)
-	putStrLn" Word count s7 "
-	print (wordCount s7)
-	
-	putStrLn " s8 "
-	print (s8)
-	print (pretty(s8))
-	putStrLn" Is nice s8 "
-	print (isNice s8)
-	putStrLn" Word count s8 "
-	print (wordCount s8)
-	
-	putStrLn " s10 "
-	print (s10)
-	print (pretty(s10))
-	putStrLn" Is nice s10 "
-	print (isNice s10)
-	putStrLn" Word count s10 "
-	print (wordCount s10)
